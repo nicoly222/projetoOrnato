@@ -7,7 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class produto {
+public class Produto {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 private int id;
@@ -17,19 +17,16 @@ private String nome;
 private String descricao;
 @Column(name = "preco")
 private double preco;
-@Column(name = "imagem")
-private String imagem;
-@Column(name = "categoria")
-private String categoria;
-public produto(){
+@Column(name = "material")
+private String material;
+public Produto(){
 
 }
-public produto(String nome, String descricao, double preco, String imagem, String categoria){
+public Produto(String nome, String descricao, double preco, String material){
     this.nome = nome;
     this.descricao = descricao;
     this.preco = preco;
-    this.imagem = imagem;
-    this.categoria = categoria;
+    this.material = material;
 }
 
 public String getnome(){
@@ -50,17 +47,12 @@ public double getpreco(){
 public void setPreco(double preco){
     this.preco = preco;
 }
-public String getimagem(){
-    return imagem;
-}
-public void setimagem(String imagem){
-    this.imagem = imagem;
-}
+
 public String getcategoria(){
-    return categoria;
+    return material;
 }
-public void setCategoria(String categoria){
-    this.categoria = categoria;
+public void setCategoria(String material){
+    this.material = material;
 }
 
 
@@ -68,4 +60,3 @@ public void setCategoria(String categoria){
 
 
     
-
