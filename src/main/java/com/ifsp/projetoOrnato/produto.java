@@ -17,15 +17,18 @@ private String nome;
 private String descricao;
 @Column(name = "preco")
 private double preco;
+@Column(name = "imagem")
+private String imagem;
 @Column(name = "material")
 private String material;
 public Produto(){
 
 }
-public Produto(String nome, String descricao, double preco, String material){
+public Produto(String nome, String descricao, double preco, String imagem, String material){
     this.nome = nome;
     this.descricao = descricao;
     this.preco = preco;
+    this.imagem = imagem;
     this.material = material;
 }
 
@@ -46,6 +49,13 @@ public double getpreco(){
 }
 public void setPreco(double preco){
     this.preco = preco;
+}
+
+public String getImagem() {
+    return imagem;
+}
+public void setImagem(String imagem) {
+    this.imagem = imagem;
 }
 
 public String getcategoria(){
