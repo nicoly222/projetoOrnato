@@ -1,6 +1,5 @@
 package com.ifsp.projetoOrnato;
 
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +18,7 @@ public class ClienteController {
 
     @GetMapping
     public String login() {
-        return "login";
+        return "login"; 
     }
 
     @PostMapping
@@ -27,9 +26,9 @@ public class ClienteController {
         cliente cliente = clienteRepo.findByEmail(email);
 
         if (cliente != null && cliente.getSenha().equals(senha)) {
-            return "redirect:/";
+            return "redirect:/"; 
         }
 
-        return "redirect:/login?erro";
+        return "redirect:/login?erro=true"; // erro no login (senha ou email inválidos)
     }
 }

@@ -10,24 +10,23 @@
     <div class="container">
         <div class="form-container">
             <h2>Inicie o seu login!</h2>
-
-            <form action="#">
+            <form id="loginForm" autocomplete="off">
                 <label for="nome">Nome:</label>
-                <input type="text" id="nome" placeholder="Digite seu nome">
+                <input type="text" id="nome" placeholder="Digite seu nome" required>
 
                 <label for="email">E-mail:</label>
-                <input type="email" id="email" placeholder="Digite seu e-mail">
+                <input type="email" id="email" placeholder="Digite seu e-mail" required>
 
                 <label for="senha">Senha:</label>
-                <input type="password" id="senha" placeholder="Digite sua senha">
-
+                <input type="password" id="senha" placeholder="Digite sua senha" required>
 
                 <button type="submit" class="btn">ENTRAR</button>
             </form>
-
+        </div>
         <div class="image-container">
             <img src="login.jpg" alt="Joias">
         </div>
     </div>
+    <script src="login.js"></script>
 </body>
 </html>

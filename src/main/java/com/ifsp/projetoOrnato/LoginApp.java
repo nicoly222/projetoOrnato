@@ -11,24 +11,23 @@ public class LoginApp {
     
     private static final String URL = "jdbc:mysql://localhost:3306/ornato";
     private static final String USER = "ORNATO";
+    private static final String PASSWORD = null;
 
-    public static boolean autenticar(String nome, String email, String senha) {
-        String sql = "SELECT * FROM usuarios WHERE nome = ? AND email = ? AND senha = ?";
-        try (Connection conn = DriverManager.getConnection(URL);
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, nome);
-            stmt.setString(2, email);
-            stmt.setString(3, senha);
-
-            ResultSet rs = stmt.executeQuery();
-            return rs.next();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+    
+ public static boolean cadastrar(String nome, String email, String senha) {
+    String sql = "INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)";
+    try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, nome);
+        stmt.setString(2, email);
+        stmt.setString(3, senha);
+        stmt.executeUpdate();
+        return true;
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
     }
-
+}
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
@@ -46,5 +45,10 @@ public class LoginApp {
         } else {
             System.out.println("Nome, e-mail ou senha incorretos.");
         }
+        
+    }
+    private static boolean autenticar(String nome, String email, String senha) {
+      
+        throw new UnsupportedOperationException("Unimplemented method 'autenticar'");
     }
 }

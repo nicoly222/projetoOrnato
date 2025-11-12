@@ -17,41 +17,40 @@ public class ProdutoController {
 
     // Listar todos os produtos
     @GetMapping
-    public List<Produto> listarTodos() {
+    public List<produto> listarTodos() {
         return produtoRepository.findAll();
     }
 
     // Buscar produto por ID
     @GetMapping("/{id}")
-    public ResponseEntity<Produto> buscarPorId(@PathVariable Long id) {
-        Optional<Produto> produto = produtoRepository.findById(id);
+    public ResponseEntity<produto> buscarPorId(@PathVariable Long id) {
+        Optional<produto> produto = produtoRepository.findById(id);
         return produto.map(ResponseEntity::ok)
                       .orElse(ResponseEntity.notFound().build());
     }
 
     // Criar novo produto
     @PostMapping
-    public ResponseEntity<Produto> criar(@RequestBody Produto produto) {
-        Produto salvo = produtoRepository.save(produto);
+    public ResponseEntity<produto> criar(@RequestBody produto produto) {
+        produto salvo = produtoRepository.save(produto);
         return ResponseEntity.ok(salvo);
     }
 
-    // Atualizar produto existente
     @PutMapping("/{id}")
-    public ResponseEntity<Produto> atualizar(@PathVariable Long id, @RequestBody Produto produtoAtualizado) {
-        Optional<Produto> opt = produtoRepository.findById(id);
+    public ResponseEntity<produto> atualizar(@PathVariable Long id, @RequestBody Produto produtoAtualizado) {
+        Optional<produto> opt = produtoRepository.findById(id);
         if (opt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        Produto produto = opt.get();
+        produto produto = opt.get();
         produto.setNome(produtoAtualizado.getnome());
         produto.setDescricao(produtoAtualizado.getdescricao());
         produto.setPreco(produtoAtualizado.getpreco());
         produto.setImagem(produtoAtualizado.getImagem());
         
 
-        Produto salvo = produtoRepository.save(produto);
+        produto salvo = produtoRepository.save(produto);
         return ResponseEntity.ok(salvo);
     }
 
