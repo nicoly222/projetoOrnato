@@ -111,7 +111,6 @@ body {
 .produto-imagens {
   flex: 1;
   display: flex;
-  flex-direction: column;
   align-items: center;
   gap: 1rem;
 }
