@@ -1,0 +1,263 @@
+/* ===============================
+   VARIÁVEIS E BASE
+================================= */
+:root {
+  --cor-primaria: #b89a67;
+  --cor-fundo: #f5f1ea;
+  --cor-texto: #2e2e2e;
+  --cor-borda: #d6cbbd;
+  --cor-botao: #bba68c;
+  --fonte: 'Poppins', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--fonte);
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
+}
+
+/* ===============================
+   HEADER
+================================= */
+.header {
+  background-color: var(--cor-primaria);
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+}
+
+.header .logo {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.header h2 {
+  font-weight: 400;
+}
+
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-icons a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* ===============================
+   CONTEÚDO PRINCIPAL
+================================= */
+.carrinho-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 2rem 4rem;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+/* ===== ITENS ===== */
+.itens {
+  flex: 2;
+}
+
+.itens h2 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+  border: 1px solid var(--cor-borda);
+  border-radius: 6px;
+  padding: 0.8rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.item img {
+  width: 70px;
+  height: 70px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.item .info {
+  flex: 1;
+  margin-left: 1rem;
+}
+
+.item .info h3 {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.item .info p {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.item .info span {
+  font-weight: 600;
+  color: var(--cor-texto);
+}
+
+.quantidade {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.quantidade p {
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+}
+
+.contador {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--cor-borda);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.contador button {
+  border: none;
+  background: none;
+  padding: 0.4rem 0.6rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.contador span {
+  padding: 0 0.5rem;
+}
+
+/* ===== RESUMO ===== */
+.resumo {
+  flex: 1;
+  background-color: #fff;
+  border-radius: 6px;
+  padding: 1rem 1.5rem;
+  border: 1px solid var(--cor-borda);
+  height: fit-content;
+}
+
+.resumo h2 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.box {
+  border: 1px solid var(--cor-borda);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.linha {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+
+.desconto small {
+  font-size: 0.7rem;
+  color: #777;
+  display: block;
+  text-align: right;
+}
+
+.total {
+  border-top: 1px solid var(--cor-borda);
+  padding-top: 0.6rem;
+}
+
+.total .preco-final {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--cor-primaria);
+}
+
+.finalizar {
+  background-color: var(--cor-botao);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  padding: 0.9rem;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.finalizar:hover {
+  background-color: var(--cor-primaria);
+}
+
+/* ===============================
+   RODAPÉ
+================================= */
+.footer {
+  background-color: var(--cor-primaria);
+  color: #fff;
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.footer p {
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.imagens-footer {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.imagens-footer img {
+  border-radius: 4px;
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+}
+
+/* ===============================
+   RESPONSIVIDADE
+================================= */
+@media (max-width: 768px) {
+  .carrinho-container {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .quantidade {
+    align-items: flex-start;
+  }
+
+  .resumo {
+    width: 100%;
+  }
+}

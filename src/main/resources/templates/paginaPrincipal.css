@@ -2,7 +2,7 @@
 :root {
     --color-background: #F2EDE6; /* Bege/Off-white claro */
     --color-primary: #a18779; /* Tom de ouro rosa/marrom suave (botões e detalhes) */
-    --color-text-dark: #333;
+    --color-text-dark: #3B2D17;
     --color-text-light: #555;
     --color-footer-bg: #b9a08e; /* Fundo do rodapé/cuidados inferior */
     --color-ornato-span: #634f40; /* Cor mais escura para o "Joias" */
@@ -47,6 +47,7 @@ body {
 }
 
 .search-bar {
+    margin-left: 4cm;
     display: flex;
     align-items: center;
     border: 1px solid #A7937A;
@@ -80,10 +81,12 @@ body {
     margin-right: 5px;
 }
 
+
 /* Navegação Principal */
 .main-nav {
+    background-color: #A7937A;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     padding: 10px 0;
     border-top: 1px solid #eee;
     max-width: var(--max-width);
@@ -91,6 +94,7 @@ body {
 }
 
 .main-nav a {
+     margin-left: 2cm;
     text-decoration: none;
     color: var(--color-text-dark);
     font-weight: 500;
