@@ -1,45 +1,45 @@
 package com.ifsp.projetoOrnato;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProdutoService {
 
-    @Autowired
-    private ProdutoRepository produtoRepository;
+    private final ProdutoRepository produtoRepository;
 
-    // Listar produtos
-    public List<Produto> listarProdutos(){
-        return produtoRepository.findAll();
-    }    
-
-    //Mostrar produto por ID
-    public Produto findById(Long id){
-        return produtoRepository.findById(id).orElse(null);
-
+    public ProdutoService(ProdutoRepository produtoRepository) {
+        this.produtoRepository = produtoRepository;
     }
-     
-    // Cadastrar novo produto
-    public Produto insertNew(Produto produto){
+
+    public List<Produto> listarTodos() {
+        return produtoRepository.findAll();
+    }
+
+    public Optional<Produto> buscarPorId(Long id) {
+        return produtoRepository.findById(id);
+    }
+
+    public Produto salvar(Produto produto) {
         return produtoRepository.save(produto);
     }
 
-    //ALterar prduto
-    public Produto update(Long id, Produto produtoAlterado){
-        Produto produtoExistente = produtoRepository.findById(id).orElse(produtoAlterado);
-        produtoExistente.setNome(produtoAlterado.getnome());
-        produtoExistente.setDescricao(produtoAlterado.getdescricao());
-        produtoExistente.setPreco(produtoAlterado.getpreco());
-        produtoExistente.setImagem(produtoAlterado.getImagem());
-        return produtoRepository.save(produtoExistente);
+    public Produto atualizar(Long id, Produto novosDados) {
+        return produtoRepository.findById(id).map(produto -> {
+
+            produto.setNome(novosDados.getNome());
+            produto.setDescricao(novosDados.getDescricao());
+            produto.setPreco(novosDados.getPreco());
+            produto.setImagem(novosDados.getImagem());
+
+            return produtoRepository.save(produto);
+
+        }).orElseThrow(() -> new RuntimeException("Produto não encontrado"));
     }
 
-    //Deletar produto
-    public void delete (Long id){
+    public void deletar(Long id) {
         produtoRepository.deleteById(id);
     }
-    
 }

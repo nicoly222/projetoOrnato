@@ -1,76 +1,104 @@
-<!DOCTYPE html>
- <html lang="pt-BR">
-    <title>Produto</title>
-<body>
-    
-</body>
- </html>
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Brinco de Gota - Dourado | Ornato Jóias</title>
-  <link rel="stylesheet" href="produto.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-</head>
-<body>
-  <!-- ======== HEADER ======== -->
-  <header class="header">
-    <div class="logo"><img src=""></span></div>
-    <div class="search">
-      <input type="text" placeholder="O que você procura?">
-    </div>
-    <div class="icons">
-      <i class="user">👤</i>
-      <i class="heart">♡</i>
-      <i class="cart">🛍️</i>
-    </div>
-  </header>
+<script>
+  // ================================
+  // 1. PEGAR O ID DO PRODUTO NA URL
+  // exemplo: produto.html?id=1
+  // ================================
+  const urlParams = new URLSearchParams(window.location.search);
+  const productId = urlParams.get("id") || 1; // fallback para 1
 
-  <!-- ======== NAV ======== -->
-  <nav class="nav">
-    <a href="#" class="back">←</a>
-    <ul>
-      <li><a href="#">Brinco</a></li>
-      <li><a href="#">Pulseira</a></li>
-      <li><a href="#">Anel</a></li>
-      <li><a href="#">Colar</a></li>
-    </ul>
-  </nav>
+  // ================================
+  // 2. BUSCAR O PRODUTO NO BACKEND
+  // ================================
+  async function carregarProduto() {
+    try {
+      const response = await fetch(`http://localhost:8080/api/produtos/${productId}`);
+      if (!response.ok) throw new Error("Produto não encontrado");
 
-  <!-- ======== PRODUTO ======== -->
-  <main class="produto-container">
-    <a href="#" class="link-voltar">Página Principal</a>
-    <div class="produto">
-      <div class="produto-imagens">
-        <img src="download.jpeg" alt="Miniatura brinco" class="thumb">
-        <img src="Brincos de gota de água elegantes e estilosos para mulheres.jpeg" alt="Brinco de Gota Dourado" class="principal">
-      </div>
+      const produto = await response.json();
 
-      <div class="produto-info">
-        <h1>Brinco de Gota – Dourado</h1>
-        <a href="#" class="avaliacoes">Ver avaliações</a>
+      document.querySelector(".produto-info h1").textContent = produto.name;
+      document.querySelector(".preco").textContent = 
+        "R$ " + Number(produto.price).toFixed(2).replace(".", ",");
 
-        <p class="preco">R$ 90,90</p>
+      if (produto.imageUrl) {
+        document.querySelector(".principal").src = produto.imageUrl;
+      }
 
-        <div class="opcoes">
-          <p>Selecione a cor:</p>
-          <div class="cores">
-            <img src="Biene Acessórios_ Semijoias Minimalistas.jpeg" alt="Cor dourada">
-          </div>
+      // Como seu site agora só tem uma cor e tamanho único:
+      document.querySelector(".cores").style.display = "none";
+      document.querySelector(".tamanhos").style.display = "none";
 
-          <p>Escolha o seu tamanho:</p>
-          <div class="tamanhos">
-            <button>P</button>
-            <button>M</button>
-            <button>G</button>
-          </div>
-        </div>
+    } catch (err) {
+      console.error("Erro ao carregar produto:", err);
+    }
+  }
 
-        <button class="btn-comprar">COMPRAR </button>
-      </div>
-    </div>
-  </main>
-</body>
-</html>
+  carregarProduto();
+
+
+  // ==============================================
+  // 3. CRIAR O CARRINHO (se ainda não existir)
+  // ==============================================
+  async function obterOuCriarCarrinho() {
+    let cartId = localStorage.getItem("cartId");
+
+    if (!cartId) {
+      const response = await fetch("http://localhost:8080/api/carrinho", {
+        method: "POST"
+      });
+      const novoCarrinho = await response.json();
+      cartId = novoCarrinho.id;
+      localStorage.setItem("cartId", cartId);
+    }
+
+    return cartId;
+  }
+
+  // ==============================================
+  // 4. ADICIONAR AO CARRINHO
+  // ==============================================
+  async function adicionarAoCarrinho() {
+    const cartId = await obterOuCriarCarrinho();
+
+    await fetch(`http://localhost:8080/api/carrinho/${cartId}/items`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        productId: Number(productId),
+        quantity: 1
+      })
+    });
+
+    mostrarMensagem("Produto adicionado ao carrinho! 🛍️");
+  }
+
+  // ==============================================
+  // 5. POPUP DE CONFIRMAÇÃO
+  // ==============================================
+  function mostrarMensagem(texto) {
+    const msg = document.createElement("div");
+    msg.textContent = texto;
+    msg.style.position = "fixed";
+    msg.style.top = "20px";
+    msg.style.right = "20px";
+    msg.style.padding = "12px 18px";
+    msg.style.backgroundColor = "#b89a67";
+    msg.style.color = "white";
+    msg.style.borderRadius = "6px";
+    msg.style.boxShadow = "0 3px 8px rgba(0,0,0,0.2)";
+    msg.style.zIndex = "9999";
+    msg.style.fontFamily = "Poppins";
+
+    document.body.appendChild(msg);
+
+    setTimeout(() => {
+      msg.remove();
+    }, 2000);
+  }
+
+  // ==============================================
+  // 6. LIGAR BOTÃO "COMPRAR" AO JS
+  // ==============================================
+  document.querySelector(".btn-comprar")
+    .addEventListener("click", adicionarAoCarrinho);
+</script>

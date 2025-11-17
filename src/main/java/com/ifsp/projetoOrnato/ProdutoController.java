@@ -1,66 +1,65 @@
 package com.ifsp.projetoOrnato;
 
-import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-
 import java.util.List;
-import java.util.Optional;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/produto")
 @CrossOrigin(origins = "*")
+@RequestMapping("/api/produtos")
 public class ProdutoController {
 
-    @Autowired
-    private ProdutoRepository produtoRepository;
+    private final ProdutoService produtoService;
 
-    // Listar todos os produtos
+    public ProdutoController(ProdutoService produtoService) {
+        this.produtoService = produtoService;
+    }
+
+    // LISTAR TODOS
     @GetMapping
-    public List<produto> listarTodos() {
-        return produtoRepository.findAll();
+    public List<Produto> listarTodos() {
+        return produtoService.listarTodos();
     }
 
-    // Buscar produto por ID
+    // BUSCAR POR ID
     @GetMapping("/{id}")
-    public ResponseEntity<produto> buscarPorId(@PathVariable Long id) {
-        Optional<produto> produto = produtoRepository.findById(id);
-        return produto.map(ResponseEntity::ok)
-                      .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Produto> buscarPorId(@PathVariable Long id) {
+        return produtoService.buscarPorId(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    // Criar novo produto
+    // CADASTRAR NOVO PRODUTO
     @PostMapping
-    public ResponseEntity<produto> criar(@RequestBody produto produto) {
-        produto salvo = produtoRepository.save(produto);
+    public ResponseEntity<Produto> cadastrar(@RequestBody Produto produto) {
+        Produto salvo = produtoService.salvar(produto);
         return ResponseEntity.ok(salvo);
     }
 
+    // ATUALIZAR PRODUTO
     @PutMapping("/{id}")
-    public ResponseEntity<produto> atualizar(@PathVariable Long id, @RequestBody Produto produtoAtualizado) {
-        Optional<produto> opt = produtoRepository.findById(id);
-        if (opt.isEmpty()) {
+    public ResponseEntity<Produto> atualizar(@PathVariable Long id, @RequestBody Produto produto) {
+        try {
+            Produto atualizado = produtoService.atualizar(id, produto);
+            return ResponseEntity.ok(atualizado);
+        } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
-
-        produto produto = opt.get();
-        produto.setNome(produtoAtualizado.getnome());
-        produto.setDescricao(produtoAtualizado.getdescricao());
-        produto.setPreco(produtoAtualizado.getpreco());
-        produto.setImagem(produtoAtualizado.getImagem());
-        
-
-        produto salvo = produtoRepository.save(produto);
-        return ResponseEntity.ok(salvo);
     }
 
-    // Deletar produto
+    // DELETAR PRODUTO
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        if (!produtoRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        produtoRepository.deleteById(id);
+        produtoService.deletar(id);
         return ResponseEntity.noContent().build();
     }
 }

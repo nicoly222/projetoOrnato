@@ -7,6 +7,66 @@
     <link rel="stylesheet" href="paginaPrincipal.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
+<script>
+    // ==========================================
+    // 1. Buscar produtos do backend
+    // ==========================================
+    async function carregarProdutos() {
+        try {
+            const response = await fetch("http://localhost:8080/api/produtos");
+            const produtos = await response.json();
+
+            preencherSecoes(produtos);
+        } catch (erro) {
+            console.error("Erro ao carregar produtos:", erro);
+        }
+    }
+
+    carregarProdutos();
+
+    // ==========================================
+    // 2. Separar produtos nas seções
+    // ==========================================
+    function preencherSecoes(produtos) {
+
+        // Distribuição (ajuste como quiser)
+        const maisProcurados = produtos.slice(0, 3);
+        const confiraTambem = produtos.slice(3, 7);
+        const emOferta = produtos.slice(7, 11);
+
+        montarGrid("mais-procurados", maisProcurados);
+        montarGrid("confira-tambem", confiraTambem);
+        montarGrid("em-oferta", emOferta);
+    }
+
+    // ==========================================
+    // 3. Criar cada card dinamicamente
+    // ==========================================
+    function montarGrid(id, lista) {
+        const container = document.getElementById(id);
+        container.innerHTML = "";
+
+        lista.forEach(produto => {
+            const card = document.createElement("div");
+            card.classList.add("product-card");
+
+            card.innerHTML = `
+                <img src="${produto.imagem}" alt="${produto.nome}">
+                <p class="product-name">${produto.nome}</p>
+                <button class="btn-confira">Confira</button>
+            `;
+
+            // Ação do botão
+            card.querySelector(".btn-confira").addEventListener("click", () => {
+                window.location.href = "produto.html?id=" + produto.id;
+            });
+
+            container.appendChild(card);
+        });
+    }
+</script>
+
 <body>
 
     <header class="header">
@@ -129,4 +189,5 @@
 
     </main>
 </body>
+<script src="userSession.js"></script>
 </html>

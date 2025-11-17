@@ -1,53 +1,105 @@
-// carrinho.js
+const cartId = localStorage.getItem("cartId");
 
-document.addEventListener("DOMContentLoaded", () => {
-  const itens = document.querySelectorAll(".item");
-  const subtotalEl = document.querySelector(".linha:nth-child(1) span");
-  const totalEl = document.querySelector(".total .preco-final");
+// ===============================
+// CARREGAR ITENS DO CARRINHO
+// ===============================
+async function carregarCarrinho() {
+    if (!cartId) {
+        document.querySelector(".itens").innerHTML = "<p>Seu carrinho está vazio.</p>";
+        return;
+    }
 
-  function atualizarTotais() {
-    let subtotal = 0;
+    const response = await fetch(`http://localhost:8080/api/carrinho/${cartId}`);
+    const carrinho = await response.json();
 
-    itens.forEach(item => {
-      const precoText = item.querySelector(".info span").textContent;
-      const preco = parseFloat(precoText.replace("R$", "").replace(",", "."));
-      const quantidade = parseInt(item.querySelector(".contador span").textContent);
-      subtotal += preco * quantidade;
+    const itensDiv = document.querySelector(".itens");
+    itensDiv.innerHTML = ""; // limpar
+
+    carrinho.items.forEach(item => {
+        itensDiv.innerHTML += `
+            <div class="item">
+                <img src="${item.product.imageUrl}" alt="${item.product.nome}">
+                <div class="info">
+                  <h3>${item.product.nome}</h3>
+                  <p>Ornato Jóias</p>
+                  <span>R$ ${Number(item.product.preco).toFixed(2).replace('.', ',')}</span>
+                </div>
+                <div class="quantidade">
+                    <p>Quantidade</p>
+                    <div class="contador">
+                        <button class="menos" data-id="${item.id}">-</button>
+                        <span>${item.quantity}</span>
+                        <button class="mais" data-id="${item.id}">+</button>
+                    </div>
+                </div>
+            </div>
+        `;
     });
 
-    const desconto = subtotal > 300 ? subtotal * 0.1 : 0;
+    calcularResumo(carrinho);
+}
+
+carregarCarrinho();
+
+
+// ===============================
+// ALTERAR QUANTIDADES
+// ===============================
+document.addEventListener("click", async (e) => {
+    if (e.target.classList.contains("mais")) {
+        const itemId = e.target.dataset.id;
+
+        await fetch(`http://localhost:8080/api/carrinho/items/${itemId}/add`, {
+            method: "PUT"
+        });
+
+        carregarCarrinho();
+    }
+
+    if (e.target.classList.contains("menos")) {
+        const itemId = e.target.dataset.id;
+
+        await fetch(`http://localhost:8080/api/carrinho/items/${itemId}/remove`, {
+            method: "PUT"
+        });
+
+        carregarCarrinho();
+    }
+});
+
+
+// ===============================
+// CALCULAR RESUMO DO CARRINHO
+// ===============================
+function calcularResumo(carrinho) {
+
+    let subtotal = carrinho.items.reduce((acc, item) =>
+        acc + item.product.preco * item.quantity, 0);
+
+    const entrega = 0;
+    const desconto = subtotal >= 300 ? subtotal * 0.10 : 0;
     const total = subtotal - desconto;
 
-    subtotalEl.textContent = `R$${subtotal.toFixed(2).replace(".", ",")}`;
-    totalEl.textContent = `R$${total.toFixed(2).replace(".", ",")}`;
-  }
-
-  // 🔢 controles de quantidade
-  itens.forEach(item => {
-    const btnMais = item.querySelector(".contador button:last-child");
-    const btnMenos = item.querySelector(".contador button:first-child");
-    const qtdEl = item.querySelector(".contador span");
-
-    btnMais.addEventListener("click", () => {
-      let qtd = parseInt(qtdEl.textContent);
-      qtdEl.textContent = (qtd + 1).toString().padStart(2, "0");
-      atualizarTotais();
-    });
-
-    btnMenos.addEventListener("click", () => {
-      let qtd = parseInt(qtdEl.textContent);
-      if (qtd > 1) {
-        qtdEl.textContent = (qtd - 1).toString().padStart(2, "0");
-        atualizarTotais();
-      }
-    });
-  });
-
-  // Inicializa os totais ao abrir a página
-  atualizarTotais();
-
-  // 🛍️ finalizar compra
-  document.querySelector(".finalizar").addEventListener("click", () => {
-    alert("Compra finalizada com sucesso! 💎");
-  });
-});
+    document.querySelector(".resumo").innerHTML = `
+        <h2>Resumo</h2>
+        <div class="box">
+            <div class="linha">
+                <p>Subtotal</p>
+                <span>R$ ${subtotal.toFixed(2).replace('.', ',')}</span>
+            </div>
+            <div class="linha">
+                <p>Entrega</p>
+                <span>R$ 00,00</span>
+            </div>
+            <div class="linha desconto">
+                <p>Desconto</p>
+                <span>${desconto > 0 ? "-10%" : "0%"}</span>
+            </div>
+            <div class="linha total">
+                <p>Total</p>
+                <span class="preco-final">R$ ${total.toFixed(2).replace('.', ',')}</span>
+            </div>
+        </div>
+        <button class="finalizar">FINALIZAR COMPRA</button>
+    `;
+}
