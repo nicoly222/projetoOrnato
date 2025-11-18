@@ -41,7 +41,8 @@ public class UserService {
     }
 
     public User login(String email, String senha) {
-        User user = userRepository.findById(email);
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        User user = userOpt.orElse(null);
         if (user != null && user.getSenha().equals(senha)) {
             return user;
         }
