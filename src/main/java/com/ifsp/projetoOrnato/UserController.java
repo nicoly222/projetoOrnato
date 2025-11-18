@@ -1,33 +1,37 @@
 package com.ifsp.projetoOrnato;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-@RestController
-@RequestMapping("/usuarios")
+@Controller
 public class UserController {
 
     @Autowired
-    private AuthService authService;
+    private UserService userService;
 
-    // Endpoint de login
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
-        if (authService.autenticar(loginRequest.getEmail(), loginRequest.getSenha())) {
-            return ResponseEntity.ok("Login realizado com sucesso!");
-        } else {
-            return ResponseEntity.status(401).body("Email ou senha incorretos");
-        }
+    // MOSTRA a tela de cadastro (GET)
+    @GetMapping("/cadastrar")
+    public String mostrarFormularioCadastro() {
+        return "login"; 
     }
 
-    // Endpoint de cadastro
-    @PostMapping("/cadastro")
-    public ResponseEntity<String> cadastrar(@RequestBody CadastroRequest cadastroRequest) {
-        if (authService.cadastrar(cadastroRequest.getNome(), cadastroRequest.getEmail(), cadastroRequest.getSenha())) {
-            return ResponseEntity.ok("Usuário cadastrado com sucesso!");
-        } else {
-            return ResponseEntity.status(400).body("Email já cadastrado");
+    // PROCESSA o formulário (POST)
+    @PostMapping("/cadastrar")
+    public String formCadastro(
+            @RequestParam("nome") String nome,
+            @RequestParam("email") String email,
+            @RequestParam("senha") String senha
+    ) {
+        try {
+            User novo = new User(nome, email, senha);
+            userService.cadastrar(novo);
+            return "redirect:/telaprincipal";
+
+        } catch (Exception e) {
+            return "redirect:/login";
         }
     }
 }
