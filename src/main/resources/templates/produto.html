@@ -1,104 +1,52 @@
-<script>
-  // ================================
-  // 1. PEGAR O ID DO PRODUTO NA URL
-  // exemplo: produto.html?id=1
-  // ================================
-  const urlParams = new URLSearchParams(window.location.search);
-  const productId = urlParams.get("id") || 1; // fallback para 1
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brinco de Gota - Dourado</title>
+    <link rel="stylesheet" href="produto.css">
+</head>
+<body>
+    <header>
+        <div class="search-bar">
+            <input type="text" placeholder="O que você procura?">
+        </div>
+        <div class="cart">
+            <span>Carrinho</span>
+        </div>
+    </header>
 
-  // ================================
-  // 2. BUSCAR O PRODUTO NO BACKEND
-  // ================================
-  async function carregarProduto() {
-    try {
-      const response = await fetch(`http://localhost:8080/api/produtos/${productId}`);
-      if (!response.ok) throw new Error("Produto não encontrado");
+    <div class="product-page">
+        <div class="product-image">
+            <img src="brincoGota.jpg" alt="Brinco de Gota Dourado">
+        </div>
 
-      const produto = await response.json();
+        <div class="product-details">
+            <h1>Brinco de Gota - Dourado</h1>
+            <p>R$ 90,90</p>
+            <div class="color-selection">
+                <label for="color">Selecione a cor:</label>
+                <select name="color" id="color">
+                    <option value="dourado">Dourado</option>
+                    <option value="prata">Prata</option>
+                </select>
+            </div>
 
-      document.querySelector(".produto-info h1").textContent = produto.name;
-      document.querySelector(".preco").textContent = 
-        "R$ " + Number(produto.price).toFixed(2).replace(".", ",");
+            <div class="size-selection">
+                <label for="size">Escolha o seu tamanho:</label>
+                <select name="size" id="size">
+                    <option value="P">P</option>
+                    <option value="M">M</option>
+                    <option value="G">G</option>
+                </select>
+            </div>
 
-      if (produto.imageUrl) {
-        document.querySelector(".principal").src = produto.imageUrl;
-      }
+            <button class="buy-button">CONFIRA</button>
+        </div>
+    </div>
 
-      // Como seu site agora só tem uma cor e tamanho único:
-      document.querySelector(".cores").style.display = "none";
-      document.querySelector(".tamanhos").style.display = "none";
-
-    } catch (err) {
-      console.error("Erro ao carregar produto:", err);
-    }
-  }
-
-  carregarProduto();
-
-
-  // ==============================================
-  // 3. CRIAR O CARRINHO (se ainda não existir)
-  // ==============================================
-  async function obterOuCriarCarrinho() {
-    let cartId = localStorage.getItem("cartId");
-
-    if (!cartId) {
-      const response = await fetch("http://localhost:8080/api/carrinho", {
-        method: "POST"
-      });
-      const novoCarrinho = await response.json();
-      cartId = novoCarrinho.id;
-      localStorage.setItem("cartId", cartId);
-    }
-
-    return cartId;
-  }
-
-  // ==============================================
-  // 4. ADICIONAR AO CARRINHO
-  // ==============================================
-  async function adicionarAoCarrinho() {
-    const cartId = await obterOuCriarCarrinho();
-
-    await fetch(`http://localhost:8080/api/carrinho/${cartId}/items`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        productId: Number(productId),
-        quantity: 1
-      })
-    });
-
-    mostrarMensagem("Produto adicionado ao carrinho! 🛍️");
-  }
-
-  // ==============================================
-  // 5. POPUP DE CONFIRMAÇÃO
-  // ==============================================
-  function mostrarMensagem(texto) {
-    const msg = document.createElement("div");
-    msg.textContent = texto;
-    msg.style.position = "fixed";
-    msg.style.top = "20px";
-    msg.style.right = "20px";
-    msg.style.padding = "12px 18px";
-    msg.style.backgroundColor = "#b89a67";
-    msg.style.color = "white";
-    msg.style.borderRadius = "6px";
-    msg.style.boxShadow = "0 3px 8px rgba(0,0,0,0.2)";
-    msg.style.zIndex = "9999";
-    msg.style.fontFamily = "Poppins";
-
-    document.body.appendChild(msg);
-
-    setTimeout(() => {
-      msg.remove();
-    }, 2000);
-  }
-
-  // ==============================================
-  // 6. LIGAR BOTÃO "COMPRAR" AO JS
-  // ==============================================
-  document.querySelector(".btn-comprar")
-    .addEventListener("click", adicionarAoCarrinho);
-</script>
+    <footer>
+        <p>© 2025 Ornato</p>
+    </footer>
+</body>
+</html>
