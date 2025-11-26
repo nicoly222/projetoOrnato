@@ -12,7 +12,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // MOSTRA a tela de cadastro (GET)
+    // MOSTRA a tela de login (GET)
     @GetMapping("/cadastrar")
     public String mostrarFormularioCadastro() {
         return "login"; 
@@ -25,8 +25,10 @@ public class UserController {
             @RequestParam("email") String email,
             @RequestParam("senha") String senha
     ) {
+
+            
         try {
-            User novo = new User(nome, email, senha);
+            User novo = new User(nome,email,senha);
             userService.cadastrar(novo);
             return "redirect:/telaprincipal";
 

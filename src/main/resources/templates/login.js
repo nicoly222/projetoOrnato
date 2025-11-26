@@ -13,7 +13,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 
     try {
         // Envia os dados para o backend
-        const response = await fetch('http://localhost:8080/usuarios/login', {
+        const response = await fetch('http://localhost:8080/user/cadastrar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, senha }),

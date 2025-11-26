@@ -1,4 +1,4 @@
-package com.ifsp.projetoOrnato; // Recomenda-se usar um pacote 'model' para entidades
+package com.ifsp.projetoOrnato;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

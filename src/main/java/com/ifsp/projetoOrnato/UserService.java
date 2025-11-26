@@ -19,4 +19,9 @@ public class UserService {
 
         return userRepository.save(user);
     }
+
+    public void login(User novo) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'login'");
+    }
 }
